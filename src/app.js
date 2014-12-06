@@ -9,8 +9,8 @@ var Vector2 = require('vector2');
 
 var device_name = "Smart Garage";
 
-var DEVICE_ID = "54ff6cXXXXXXXXXXXXXXXXX";
-var ACCESS_TOKEN = "813b2XXXXXXXXXXXXXXXXX1XXXXXXXXXXXXXXXX";
+var DEVICE_ID = "54ff6cXXXXXXXXXXXXXXXXX";// <<< replace with your device ID
+var ACCESS_TOKEN = "813b2XXXXXXXXXXXXXXXXX1XXXXXXXXXXXXXXXX";// <<< replace with your access token
 //var SPARKCORE_FUNCTION = "OperateDoor";
 
 console.log(device_name + " app started");
