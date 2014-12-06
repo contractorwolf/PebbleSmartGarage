@@ -3,14 +3,14 @@ var ajax = require('ajax');
 var vibe = require('ui/vibe');
 var Vector2 = require('vector2');
 
-// Core ID is 54ff6c066672524825502067
-// Your access token is 813b2eb1b01a95380a0a1c58a70e64316f64d758
-// curl https://api.spark.io/v1/devices/54ff6c066672524825502067/OperateDoor -d access_token=813b2eb1b01a95380a0a1c58a70e64316f64d758 -d "args=CLOSE"
+// Core ID is 54ff6cXXXXXXXXXXXXXXXXXXX
+// Your access token is 813b2XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+// curl https://api.spark.io/v1/devices/54ff6cXXXXXXXXXXXXXXXXXX/OperateDoor -d access_token=813b2XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -d "args=CLOSE"
 
 var device_name = "Smart Garage";
 
-var DEVICE_ID = "54ff6c066672524825502067";
-var ACCESS_TOKEN = "813b2eb1b01a95380a0a1c58a70e64316f64d758";
+var DEVICE_ID = "54ff6cXXXXXXXXXXXXXXXXX";
+var ACCESS_TOKEN = "813b2XXXXXXXXXXXXXXXXX1XXXXXXXXXXXXXXXX";
 //var SPARKCORE_FUNCTION = "OperateDoor";
 
 console.log(device_name + " app started");
@@ -78,7 +78,6 @@ function DoGet(function_name){
   DrawCard("Attempt GET","sending...","");
   
   //make url based on function being called and device tokens
-  //https://api.spark.io/v1/devices/54ff6c066672524825502067/isClosed?access_token=813b2eb1b01a95380a0a1c58a70e64316f64d758
   var URL = 'https://api.spark.io/v1/devices/' + DEVICE_ID + '/' + function_name +'?access_token=' + ACCESS_TOKEN; //identify which sparkcore and function
   
   //log data being used
