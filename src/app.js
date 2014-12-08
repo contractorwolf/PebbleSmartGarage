@@ -3,38 +3,114 @@ var ajax = require('ajax');
 var vibe = require('ui/vibe');
 var Vector2 = require('vector2');
 
-// Core ID is 54ff6cXXXXXXXXXXXXXXXXXXX
-// Your access token is 813b2XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-// curl https://api.spark.io/v1/devices/54ff6cXXXXXXXXXXXXXXXXXX/OperateDoor -d access_token=813b2XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -d "args=CLOSE"
-
 var device_name = "Smart Garage";
 
-var DEVICE_ID = "54ff6cXXXXXXXXXXXXXXXXX";// <<< replace with your device ID
-var ACCESS_TOKEN = "813b2XXXXXXXXXXXXXXXXX1XXXXXXXXXXXXXXXX";// <<< replace with your access token
-//var SPARKCORE_FUNCTION = "OperateDoor";
+var DEVICE_ID = "54ff6c066672524825502067";
+var ACCESS_TOKEN = "f750c35957681c73f09b59c7b0fda1465e3ce903";
 
 console.log(device_name + " app started");
 
-// Create a Card with title and subtitle
-var card = new UI.Card();
-DrawCard(device_name,"started...","");
-card.show();
-var status_window = new UI.Window();
-
-var splash_window = new UI.Window();
 
 var main_window = new UI.Window();
+
+
+//static text for buttons
+var txtOpenLabel = new UI.Text({
+    position: new Vector2(0, 20),
+    size: new Vector2(144, 30),
+    font: 'Gothic 24',
+    text: 'open',
+    textAlign: 'right',
+    color: 'white'
+});
+
+var txtCloseLabel = new UI.Text({
+    position: new Vector2(0, 105),
+    size: new Vector2(144, 30),
+    font: 'Gothic 24',
+    text: 'close',
+    textAlign: 'right',
+    color: 'white'
+});
+
+var txtUpdateLabel = new UI.Text({
+    position: new Vector2(0, 62),
+    size: new Vector2(144, 30),
+    font: 'Gothic 24',
+    text: 'update',
+    textAlign: 'right',
+    color: 'white'
+});
+
+var txtHeaderLabel = new UI.Text({
+    position: new Vector2(0, 0),
+    size: new Vector2(144, 30),
+    font: 'Gothic 18',
+    text: 'Sparkcore',
+    textAlign: 'center',
+    color: 'white'
+});
+
+var txtFooterLabel = new UI.Text({
+    position: new Vector2(0, 130),
+    size: new Vector2(144, 30),
+    font: 'Gothic 18',
+    text: 'SmartGarage',
+    textAlign: 'center',
+    color: 'white'
+});
+
+
+
+
+//initialization
+UpdateMain('started');
+DoGet('isClosed');
+
+
+
+
 
 
 //***************************
 //*** FUNCTIONS *************
   
 
+function UpdateMain(message){
+  main_window.each(function(element) {
+    main_window.remove(element);
+  });
+  main_window.each(function(element) {
+    main_window.remove(element);
+  });
+
+  main_window.backgroundColor('black');
+
+  var txtStatus = new UI.Text({
+    position: new Vector2(5, 62),
+    size: new Vector2(144, 10),
+    font: 'Gothic 28 Bold',
+    text: message,
+    textAlign: 'left',
+    color: 'white'
+  });
+  
+  main_window.add(txtHeaderLabel);
+  main_window.add(txtOpenLabel);
+  main_window.add(txtStatus);
+  main_window.add(txtUpdateLabel);  
+  main_window.add(txtCloseLabel);
+  main_window.add(txtFooterLabel);
+   
+  
+  main_window.show();
+}
+
 function DoPost(function_name,function_value){
   console.log("DoPost(): " + new Date().getTime());  
   
   //display card
-  DrawCard("Attempt Post","sending...","");
+  UpdateMain("Attempt");
   
   //make url based on function being called and device tokens
   var URL = 'https://api.spark.io/v1/devices/' + DEVICE_ID + '/' + function_name +'?access_token=' + ACCESS_TOKEN; //identify which sparkcore and function
@@ -56,13 +132,21 @@ function DoPost(function_name,function_value){
       console.log("Success: " + JSON.stringify(data));
       vibe.vibrate('short');
       // Show to user
-      DrawCard("POST", "success: " + function_value, JSON.stringify(data));
+      if(data.return_value===0){
+        UpdateMain("Closing"); 
+      }else if(data.return_value==1){
+        UpdateMain("Opening");      
+      }else{
+        UpdateMain("UNKN:" + data.return_value);      
+      }
+      
+      //setTimeout(GetIsClosed(), 30000);
     },
     function(error) {
       // Failure
       console.log('Failed: ' + error.toString());
       
-      DrawCard("POST", "failed: " + function_value, error.toString());
+      UpdateMain("FAILED");
       
     }
   );
@@ -70,14 +154,19 @@ function DoPost(function_name,function_value){
   console.log("Comleted DoPost(): " + new Date().getTime());  
 }
 
+function GetIsClosed(){
+  DoGet('isClosed');
+  
+}
 
 function DoGet(function_name){
   console.log("DoGet(): " + new Date().getTime());  
   
   //display card
-  DrawCard("Attempt GET","sending...","");
+  UpdateMain("Updating");
   
   //make url based on function being called and device tokens
+  //https://api.spark.io/v1/devices/54ff6c066672524825502067/isClosed?access_token=813b2eb1b01a95380a0a1c58a70e64316f64d758
   var URL = 'https://api.spark.io/v1/devices/' + DEVICE_ID + '/' + function_name +'?access_token=' + ACCESS_TOKEN; //identify which sparkcore and function
   
   //log data being used
@@ -96,18 +185,18 @@ function DoGet(function_name){
       // Show to user
       
       if(data.result==1){
-        DrawStatusWindow("CLOSED");
-      }else if(data.result==0){
-        DrawStatusWindow("OPEN");
+        UpdateMain("Closed");
+      }else if(data.result===0){
+        UpdateMain("Open");
         
       }else{
-        DrawStatusWindow("UNKN: " + data.result);
+        UpdateMain("UNKN: " + data.result);
       }
     },
     function(error) {
       // Failure
       console.log('Failed: ' + error.toString());
-      DrawStatusWindow("FAILED"); 
+      UpdateMain("FAILED"); 
     }
   );
   
@@ -116,78 +205,23 @@ function DoGet(function_name){
 
 
 
-function DrawCard(title,subtitle,body){
-  console.log("DrawCard: " + new Date().getTime());  
-  
-  card.title(title);
-  card.subtitle(subtitle);
-  card.body(body);
-  
-  console.log("Comleted DrawCard: " + new Date().getTime());  
-}
-
-
-
-function DrawStatusWindow(status){
-  
-  status_window.each(function(element) {
-    status_window.remove(element);
-  });
-
-  status_window.backgroundColor('black');
-   var txtLabel = new UI.Text({
-    position: new Vector2(0, 0),
-    size: new Vector2(144, 30),
-    font: 'Gothic 24',
-    text: 'DOOR CURRENTLY:',
-    textAlign: 'left',
-    color: 'white'
-  });
-  var txtStatus = new UI.Text({
-    position: new Vector2(0, 50),
-    size: new Vector2(144, 30),
-    font: 'Bitham 30 Black',
-    text: status,
-    textAlign: 'center',
-    color: 'white'
-  });
-  status_window.add(txtLabel);
-  status_window.add(txtStatus);
-  status_window.show();
-  
-  
-  
-}
-
-
-
-
-
 
 //BUTTON ACTIONS
-card.on('click', 'up', function(e) {
+main_window.on('click', 'up', function(e) {
   console.log("click up");
   DoPost('OperateDoor','OPEN');
 });
 
-card.on('click', 'down', function(e) {
+main_window.on('click', 'down', function(e) {
   console.log("click up");
   DoPost('OperateDoor','CLOSE');
 });
 
 
-card.on('click', 'select', function(e) {
+main_window.on('click', 'select', function(e) {
   console.log("click select");
   DoGet('isClosed');
 });
-
-
-card.on('click', 'select', function(e) {
-  DrawCard(device_name,"started...","");
-  status_window.hide();
-});
-
-
 
 
 
