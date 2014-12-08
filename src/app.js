@@ -5,8 +5,8 @@ var Vector2 = require('vector2');
 
 var device_name = "Smart Garage";
 
-var DEVICE_ID = "54ff6c066672524825502067";
-var ACCESS_TOKEN = "f750c35957681c73f09b59c7b0fda1465e3ce903";
+var DEVICE_ID = "54xxxxxxxxxxxxxxxxxxxxx";
+var ACCESS_TOKEN = "f75xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
 console.log(device_name + " app started");
 
