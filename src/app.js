@@ -5,8 +5,8 @@ var Vector2 = require('vector2');
 
 var device_name = "Smart Garage";
 
-var DEVICE_ID = "54xxxxxxxxxxxxxxxxxxxxx";
-var ACCESS_TOKEN = "f75xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+var DEVICE_ID = "54xxxxxxxxxxxxxxxxxxxxx";//FROM SPARKCORE IDE
+var ACCESS_TOKEN = "f75xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";//FROM SPARKCORE IDE
 
 console.log(device_name + " app started");
 
