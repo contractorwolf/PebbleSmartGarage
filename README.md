@@ -6,6 +6,7 @@ http://contractorwolf.com/sparkcore-smart-garage/
 
 
 To run this code you will need to replace the following lines with the DeviceID and Authentication Token using Spark.io Web IDE:
+
 //*******************
 
 var DEVICE_ID = "54xxxxxxxxxxxxxxxxxxxxx";//FROM SPARKCORE IDE
